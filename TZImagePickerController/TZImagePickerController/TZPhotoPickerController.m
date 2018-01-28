@@ -788,6 +788,7 @@ static CGFloat itemMargin = 5;
                 assetModel.isSelected = YES;
                 [tzImagePickerVc.selectedModels addObject:assetModel];
                 [self refreshBottomToolBarStatus];
+                [self reIndexSelection];
             }
             _collectionView.hidden = YES;
             [_collectionView reloadData];
