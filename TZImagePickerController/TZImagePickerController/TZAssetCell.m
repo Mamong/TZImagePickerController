@@ -18,6 +18,7 @@
 @property (weak, nonatomic) UIImageView *selectImageView;
 @property (weak, nonatomic) UIView *bottomView;
 @property (weak, nonatomic) UILabel *timeLength;
+@property (weak, nonatomic) UILabel *indexLabel;
 
 @property (nonatomic, weak) UIImageView *videoImgView;
 @property (nonatomic, strong) TZProgressView *progressView;
@@ -57,6 +58,7 @@
     self.imageRequestID = imageRequestID;
     self.selectPhotoButton.selected = model.isSelected;
     self.selectImageView.image = self.selectPhotoButton.isSelected ? [UIImage imageNamedFromMyBundle:self.photoSelImageName] : [UIImage imageNamedFromMyBundle:self.photoDefImageName];
+    [self updateSelectedIndex];
     self.type = (NSInteger)model.type;
     // 让宽度/高度小于 最小可选照片尺寸 的图片不能选中
     if (![[TZImageManager manager] isPhotoSelectableWithAsset:model.asset]) {
@@ -70,6 +72,13 @@
         [self fetchBigImage];
     }
     [self setNeedsLayout];
+}
+
+-(void)updateSelectedIndex
+{
+    TZAssetModel *model = _model;
+    self.indexLabel.hidden = !model.isSelected ||model.index <= 0;
+    self.indexLabel.text = [NSString stringWithFormat:@"%ld",model.index];
 }
 
 - (void)setShowSelectBtn:(BOOL)showSelectBtn {
@@ -186,6 +195,24 @@
     return _selectImageView;
 }
 
+- (UILabel*)indexLabel{
+    if (!_indexLabel) {
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 22.5, 22.5)];
+        label.backgroundColor = [UIColor colorWithRed:252/255. green:178/255. blue:0/255. alpha:1];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:16];
+        label.layer.cornerRadius = 11.25;
+        label.layer.masksToBounds = YES;
+        label.layer.borderWidth = 1.;
+        label.layer.borderColor = [UIColor whiteColor].CGColor;
+        label.hidden = YES;
+        [self.selectImageView addSubview:label];
+        _indexLabel = label;
+    }
+    return _indexLabel;
+}
+
 - (UIView *)bottomView {
     if (_bottomView == nil) {
         UIView *bottomView = [[UIView alloc] init];
@@ -235,7 +262,8 @@
     } else {
         _selectPhotoButton.frame = self.bounds;
     }
-    _selectImageView.frame = CGRectMake(self.tz_width - 27, 0, 27, 27);
+    _selectImageView.frame = CGRectMake(self.tz_width - 24.5, 2, 22.5, 22.5);
+    _indexLabel.frame = _selectImageView.bounds;
     _imageView.frame = CGRectMake(0, 0, self.tz_width, self.tz_height);
     
     static CGFloat progressWH = 20;

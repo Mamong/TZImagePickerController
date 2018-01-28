@@ -35,6 +35,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL showSelectBtn;
 @property (assign, nonatomic) BOOL allowPreview;
 
+- (void)updateSelectedIndex;
 @end
 
 
