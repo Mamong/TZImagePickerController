@@ -707,8 +707,13 @@ static CGFloat itemMargin = 5;
         model.isSelected = NO;
         NSMutableArray *selectedAssets = [NSMutableArray array];
         TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
-        for (TZAssetModel *model in tzImagePickerVc.selectedModels) {
-            [selectedAssets addObject:model.asset];
+        for (TZAssetModel *smodel in tzImagePickerVc.selectedModels) {
+            [selectedAssets addObject:smodel.asset];
+            if (iOS8Later) {
+                if ([model.asset isEqual:smodel.asset]) {
+                    model.index = smodel.index;
+                }
+            }
         }
         if ([[TZImageManager manager] isAssetsArray:selectedAssets containAsset:model.asset]) {
             model.isSelected = YES;
