@@ -645,6 +645,7 @@ static CGFloat itemMargin = 5;
     [photoPreviewVc setBackButtonClickBlock:^(BOOL isSelectOriginalPhoto) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         strongSelf.isSelectOriginalPhoto = isSelectOriginalPhoto;
+        [strongSelf reIndexSelection];
         [strongSelf.collectionView reloadData];
         [strongSelf refreshBottomToolBarStatus];
     }];
